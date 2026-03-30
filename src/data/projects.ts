@@ -59,7 +59,6 @@ export const projects: Project[] = [
     coverAlt: "AIGC短片封面",
     description: "使用 AI 工具制作的短片示例。",
     tags: ["AIGC", "短片"],
-    videoUrl: "",
     links: [{ label: "Bilibili", url: "https://www.bilibili.com" }],
   },
 
