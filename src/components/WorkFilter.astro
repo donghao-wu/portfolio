@@ -36,7 +36,7 @@ const tabs = ["全部", "ROOM 01", "ROOM 02", "ROOM 03", "ROOM 04"];
       // Show/hide cards
       cards.forEach(card => {
         if (filter === 'all' || card.dataset.room === filter) {
-          card.style.display = '';
+          card.style.display = 'block';
         } else {
           card.style.display = 'none';
         }
