@@ -1,18 +1,31 @@
 ---
-const tabs = ["全部", "ROOM 01", "ROOM 02", "ROOM 03", "ROOM 04"];
+import type { Room } from '../data/projects';
+import { ROOM_LABELS } from '../data/projects';
+
+const roomList: Room[] = [
+  'ROOM 01',
+  'ROOM 02',
+  'ROOM 03',
+  'ROOM 04',
+  'ROOM 05',
+  'ROOM 06',
+];
 ---
 <div class="flex flex-wrap gap-2 mb-10" id="filter-tabs">
-  {tabs.map((tab, i) => (
+  <button
+    type="button"
+    data-filter="all"
+    class="px-4 py-1.5 font-sans text-xs tracking-widest border transition-colors duration-200 border-dark bg-dark text-cream"
+  >
+    全部
+  </button>
+  {roomList.map((room) => (
     <button
-      data-filter={tab === "全部" ? "all" : tab}
-      class:list={[
-        "px-4 py-1.5 font-sans text-xs tracking-widest uppercase border transition-colors duration-200",
-        i === 0
-          ? "border-dark bg-dark text-cream"
-          : "border-border text-muted hover:border-dark hover:text-dark",
-      ]}
+      type="button"
+      data-filter={room}
+      class="px-4 py-1.5 font-sans text-xs tracking-widest border transition-colors duration-200 border-border text-muted hover:border-dark hover:text-dark"
     >
-      {tab}
+      {ROOM_LABELS[room]}
     </button>
   ))}
 </div>
@@ -21,20 +34,18 @@ const tabs = ["全部", "ROOM 01", "ROOM 02", "ROOM 03", "ROOM 04"];
   const tabs = document.querySelectorAll<HTMLButtonElement>('#filter-tabs button');
   const cards = document.querySelectorAll<HTMLElement>('[data-room]');
 
-  tabs.forEach(tab => {
+  tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
       const filter = tab.dataset.filter!;
 
-      // Update tab styles
-      tabs.forEach(t => {
+      tabs.forEach((t) => {
         t.classList.remove('border-dark', 'bg-dark', 'text-cream');
         t.classList.add('border-border', 'text-muted');
       });
       tab.classList.add('border-dark', 'bg-dark', 'text-cream');
       tab.classList.remove('border-border', 'text-muted');
 
-      // Show/hide cards
-      cards.forEach(card => {
+      cards.forEach((card) => {
         if (filter === 'all' || card.dataset.room === filter) {
           card.style.display = 'block';
         } else {
@@ -44,11 +55,10 @@ const tabs = ["全部", "ROOM 01", "ROOM 02", "ROOM 03", "ROOM 04"];
     });
   });
 
-  // Read ?room= param from URL and auto-activate the correct tab on load
   const params = new URLSearchParams(window.location.search);
   const roomParam = params.get('room');
   if (roomParam) {
-    const matchingTab = [...tabs].find(t => t.dataset.filter === roomParam);
+    const matchingTab = [...tabs].find((t) => t.dataset.filter === roomParam);
     if (matchingTab) matchingTab.click();
   }
 </script>

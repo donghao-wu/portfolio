@@ -1,18 +1,22 @@
 ---
+import { withBase } from '../lib/site';
+
 const currentPath = Astro.url.pathname;
+const onWorks = currentPath.includes('/works');
+const onAbout = currentPath.replace(/\/$/, '').endsWith('/about');
 ---
 <nav class="fixed top-0 left-0 right-0 z-50 bg-cream border-b border-border">
   <div class="flex items-center justify-between px-8 py-5">
-    <a href="/" class="font-serif text-lg tracking-widest uppercase text-dark hover:opacity-60 transition-opacity">
-      你的名字
+    <a href={withBase('/')} class="font-serif text-lg tracking-widest uppercase text-dark hover:opacity-60 transition-opacity">
+      Lucius 吴东昊
     </a>
 
     <!-- Desktop links -->
     <div class="hidden md:flex gap-8 font-sans text-sm tracking-wider uppercase text-muted">
-      <a href="/works" class:list={["hover:text-dark transition-colors", { "text-dark": currentPath.startsWith("/works") }]}>
+      <a href={withBase('/works')} class:list={["hover:text-dark transition-colors", { "text-dark": onWorks }]}>
         作品
       </a>
-      <a href="/about" class:list={["hover:text-dark transition-colors", { "text-dark": currentPath === "/about" }]}>
+      <a href={withBase('/about')} class:list={["hover:text-dark transition-colors", { "text-dark": onAbout }]}>
         关于
       </a>
     </div>
@@ -27,8 +31,8 @@ const currentPath = Astro.url.pathname;
 
   <!-- Mobile drawer -->
   <div id="nav-drawer" class="hidden md:hidden border-t border-border px-8 py-6 flex flex-col gap-5 font-sans text-sm tracking-wider uppercase text-muted">
-    <a href="/works" class="hover:text-dark transition-colors">作品</a>
-    <a href="/about" class="hover:text-dark transition-colors">关于</a>
+    <a href={withBase('/works')} class="hover:text-dark transition-colors">作品</a>
+    <a href={withBase('/about')} class="hover:text-dark transition-colors">关于</a>
   </div>
 </nav>
 

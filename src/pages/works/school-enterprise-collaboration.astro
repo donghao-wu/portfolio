@@ -1,0 +1,20 @@
+---
+import { withBase } from '../../lib/site';
+
+/** 旧 slug：曾用「校企联合 · 合作与实训」单条，现拆为三所高校条目 */
+const to = withBase('/works/zhengzhou-sias-school-enterprise');
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content={`0;url=${to}`} />
+    <link rel="canonical" href={to} />
+    <title>跳转中…</title>
+  </head>
+  <body style="font-family: system-ui, sans-serif; padding: 2rem;">
+    <p>页面已更新，正在跳转至西亚斯校企联合…</p>
+    <p><a href={to}>若未自动跳转，请点击这里</a></p>
+  </body>
+</html>

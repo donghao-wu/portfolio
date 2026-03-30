@@ -6,7 +6,14 @@ import { projects } from '../../data/projects';
 
 // Sort: by room order, then by project order within room
 const sorted = [...projects].sort((a, b) => {
-  const roomOrder = ["ROOM 01","ROOM 02","ROOM 03","ROOM 04"];
+  const roomOrder = [
+    "ROOM 01",
+    "ROOM 02",
+    "ROOM 03",
+    "ROOM 04",
+    "ROOM 05",
+    "ROOM 06",
+  ];
   const roomDiff = roomOrder.indexOf(a.room) - roomOrder.indexOf(b.room);
   return roomDiff !== 0 ? roomDiff : a.order - b.order;
 });

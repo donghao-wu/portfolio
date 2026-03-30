@@ -1,5 +1,6 @@
 ---
-import type { Project } from '../data/projects';
+import { roomTitle, type Project } from '../data/projects';
+import { withBase } from '../lib/site';
 
 interface Props {
   project: Project;
@@ -7,14 +8,14 @@ interface Props {
 const { project } = Astro.props;
 ---
 <a
-  href={`/works/${project.slug}`}
+  href={withBase(`/works/${project.slug}`)}
   class="group block relative overflow-hidden border border-border hover:border-dark transition-colors duration-300"
   data-room={project.room}
 >
   <!-- Cover image with year overlay -->
   <div class="aspect-[4/3] relative overflow-hidden bg-border">
     <img
-      src={project.cover}
+      src={withBase(project.cover)}
       alt={project.coverAlt}
       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
     />
@@ -26,7 +27,7 @@ const { project } = Astro.props;
 
   <!-- Card info -->
   <div class="p-4 bg-cream">
-    <p class="font-sans text-xs tracking-[0.2em] uppercase text-muted mb-1">{project.room}</p>
+    <p class="font-sans text-xs tracking-[0.2em] text-muted mb-1">{roomTitle(project.room)}</p>
     <p class="font-serif text-lg text-dark leading-snug">{project.title}</p>
   </div>
 </a>

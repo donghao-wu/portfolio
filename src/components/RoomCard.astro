@@ -1,28 +1,30 @@
 ---
-import type { Room } from '../data/projects';
+import { roomTitle, type Room } from '../data/projects';
+import { withBase } from '../lib/site';
 
 interface Props {
   room: Room;
-  label: string;
   cover: string;
   coverAlt: string;
   href: string;
 }
-const { room, label, cover, coverAlt, href } = Astro.props;
+const { room, cover, coverAlt, href } = Astro.props;
 ---
-<a href={href} class="group block relative overflow-hidden border border-border hover:border-dark transition-colors duration-300">
+<a
+  href={withBase(href)}
+  class="group relative flex flex-col h-full overflow-hidden border border-border bg-cream hover:border-dark transition-colors duration-300"
+>
   <!-- Cover image -->
-  <div class="aspect-[4/3] overflow-hidden bg-border">
+  <div class="flex-none aspect-[4/3] overflow-hidden bg-border">
     <img
-      src={cover}
+      src={withBase(cover)}
       alt={coverAlt}
-      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+      class="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-500"
     />
   </div>
 
   <!-- Room label overlay -->
-  <div class="p-5">
-    <p class="font-sans text-xs tracking-[0.2em] uppercase text-muted mb-1">{room}</p>
-    <p class="font-serif text-xl text-dark">{label}</p>
+  <div class="flex-none p-5 min-h-[84px] flex flex-col justify-center bg-cream">
+    <p class="font-serif text-xl text-dark truncate">{roomTitle(room)}</p>
   </div>
 </a>

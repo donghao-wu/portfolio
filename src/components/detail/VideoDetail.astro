@@ -1,31 +1,69 @@
 ---
 import type { Project } from '../../data/projects';
+import { withBase } from '../../lib/site';
 interface Props { project: Project }
 const { project } = Astro.props;
-const biliLink = project.links?.find(l => l.label === "Bilibili");
+
+const links = project.links?.filter((l) => l.url?.trim()) ?? [];
+
+function watchCta(label: string): string {
+  switch (label) {
+    case "Bilibili":
+      return "在 Bilibili 观看 →";
+    case "YouTube":
+      return "在 YouTube 观看 →";
+    case "抖音":
+      return "在抖音观看 →";
+    case "快手":
+      return "在快手观看 →";
+    case "小红书":
+      return "在小红书观看 →";
+    case "红果":
+    case "红果短剧":
+      return "打开红果观看 →";
+    default:
+      return `${label} →`;
+  }
+}
+
+const note = project.viewingNote?.trim();
+const showDefaultNoLink =
+  !project.videoUrl && links.length === 0 && !note;
 ---
 <div class="space-y-6">
   {project.videoUrl ? (
     <div class="w-full" style="aspect-ratio: 16/9;">
       <iframe
         src={project.videoUrl}
-        title="Bilibili 视频播放器"
+        title="视频播放"
         class="w-full h-full border-0"
         allowfullscreen
         sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"
       />
     </div>
   ) : (
-    <img src={project.cover} alt={project.coverAlt} class="w-full object-cover" />
+    <img src={withBase(project.cover)} alt={project.coverAlt} class="w-full object-cover" />
   )}
-  {biliLink && (
-    <a
-      href={biliLink.url}
-      target="_blank"
-      rel="noopener"
-      class="inline-block px-6 py-2.5 border border-dark text-dark font-sans text-xs tracking-widest uppercase hover:bg-dark hover:text-cream transition-colors duration-200"
-    >
-      在 Bilibili 观看 →
-    </a>
+  {links.length > 0 && (
+    <div class="flex flex-wrap gap-3">
+      {links.map((link) => (
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener"
+          class="inline-block px-6 py-2.5 border border-dark text-dark font-sans text-xs tracking-widest uppercase hover:bg-dark hover:text-cream transition-colors duration-200"
+        >
+          {watchCta(link.label)}
+        </a>
+      ))}
+    </div>
+  )}
+  {note && (
+    <p class="font-sans text-sm text-muted leading-relaxed max-w-prose">{note}</p>
+  )}
+  {showDefaultNoLink && (
+    <p class="font-sans text-sm text-muted leading-relaxed max-w-prose">
+      暂无公开观看链接；若作品未上架公开平台，说明见上方简介。
+    </p>
   )}
 </div>
