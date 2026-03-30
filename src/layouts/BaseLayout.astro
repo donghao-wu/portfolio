@@ -1,0 +1,27 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = "个人作品集" } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title} — 你的名字</title>
+  </head>
+  <body class="bg-cream min-h-screen font-sans">
+    <Nav />
+    <main class="pt-20">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
