@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import WorkFilter from '../../components/WorkFilter.astro';
+import { projects } from '../../data/projects';
+
+// Sort: by room order, then by project order within room
+const sorted = [...projects].sort((a, b) => {
+  const roomOrder = ["ROOM 01","ROOM 02","ROOM 03","ROOM 04"];
+  const roomDiff = roomOrder.indexOf(a.room) - roomOrder.indexOf(b.room);
+  return roomDiff !== 0 ? roomDiff : a.order - b.order;
+});
+---
+<BaseLayout title="作品集">
+  <div class="px-8 pt-12 pb-20 max-w-5xl mx-auto">
+    <!-- Page header -->
+    <div class="border-b border-border pb-8 mb-10">
+      <h1 class="font-serif text-5xl font-light text-dark mb-2">作品集</h1>
+      <p class="font-sans text-sm text-muted tracking-wide">Collection</p>
+    </div>
+
+    <!-- Filter tabs -->
+    <WorkFilter />
+
+    <!-- Works grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border border border-border">
+      {sorted.map(project => <WorkCard project={project} />)}
+    </div>
+  </div>
+</BaseLayout>

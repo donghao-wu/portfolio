@@ -1,0 +1,32 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+---
+<a
+  href={`/works/${project.slug}`}
+  class="group block relative overflow-hidden border border-border hover:border-dark transition-colors duration-300"
+  data-room={project.room}
+>
+  <!-- Cover image with year overlay -->
+  <div class="aspect-[4/3] relative overflow-hidden bg-border">
+    <img
+      src={project.cover}
+      alt={project.coverAlt}
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+    />
+    <!-- Decorative year number -->
+    <span class="absolute bottom-2 right-3 font-serif text-6xl font-extralight text-white opacity-20 leading-none select-none pointer-events-none">
+      {project.year}
+    </span>
+  </div>
+
+  <!-- Card info -->
+  <div class="p-4 bg-cream">
+    <p class="font-sans text-xs tracking-[0.2em] uppercase text-muted mb-1">{project.room}</p>
+    <p class="font-serif text-lg text-dark leading-snug">{project.title}</p>
+  </div>
+</a>
