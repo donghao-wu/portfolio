@@ -1,0 +1,28 @@
+---
+import type { Room } from '../data/projects';
+
+interface Props {
+  room: Room;
+  label: string;
+  cover: string;
+  coverAlt: string;
+  href: string;
+}
+const { room, label, cover, coverAlt, href } = Astro.props;
+---
+<a href={href} class="group block relative overflow-hidden border border-border hover:border-dark transition-colors duration-300">
+  <!-- Cover image -->
+  <div class="aspect-[4/3] overflow-hidden bg-border">
+    <img
+      src={cover}
+      alt={coverAlt}
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+    />
+  </div>
+
+  <!-- Room label overlay -->
+  <div class="p-5">
+    <p class="font-sans text-xs tracking-[0.2em] uppercase text-muted mb-1">{room}</p>
+    <p class="font-serif text-xl text-dark">{label}</p>
+  </div>
+</a>

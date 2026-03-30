@@ -1,6 +1,46 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import RoomCard from '../components/RoomCard.astro';
+import { getFeatured } from '../data/projects';
+
+const rooms = [
+  { room: "ROOM 01" as const, label: "AIGC 创作账号" },
+  { room: "ROOM 02" as const, label: "AIGC 短片" },
+  { room: "ROOM 03" as const, label: "软件开发" },
+  { room: "ROOM 04" as const, label: "学术论文" },
+];
+
+const featuredByRoom = rooms.map(r => ({
+  ...r,
+  project: getFeatured(r.room),
+}));
 ---
 <BaseLayout title="首页">
-  <p class="p-8 font-serif text-4xl">Hello</p>
+  <!-- Hero -->
+  <section class="px-8 pt-20 pb-16 max-w-5xl mx-auto">
+    <h1 class="font-serif text-6xl sm:text-8xl font-light text-dark leading-none mb-4">
+      你的名字
+    </h1>
+    <p class="font-sans text-base text-muted tracking-wide">
+      AIGC Creator · Developer · Researcher
+    </p>
+  </section>
+
+  <!-- Room divider -->
+  <div class="px-8 max-w-5xl mx-auto border-t border-border mb-12">
+    <p class="font-sans text-xs tracking-[0.3em] uppercase text-muted pt-4">展厅</p>
+  </div>
+
+  <!-- Room grid -->
+  <section class="px-8 pb-20 max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-px bg-border border border-border">
+    {featuredByRoom.map(({ room, label, project }) => (
+      <RoomCard
+        room={room}
+        label={label}
+        cover={project.cover}
+        coverAlt={project.coverAlt}
+        href={`/works?room=${encodeURIComponent(room)}`}
+      />
+    ))}
+  </section>
 </BaseLayout>
