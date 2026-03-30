@@ -1,5 +1,9 @@
 # 静态站 → GitHub Pages
-# 仓库 Settings → Pages → Source 选「GitHub Actions」
+#
+# 若曾用「Deploy from a branch」部署过，必须改一次设置，否则会与 Actions 冲突：
+# 1. 仓库 Settings → Pages → Build and deployment → Source 选「GitHub Actions」（不要选 branch / folder）
+# 2. 若存在仅用于旧部署的 gh-pages 分支，可删除该分支（可选）
+# 3. Actions 里若 deploy 任务显示 “Waiting”：Settings → Environments → github-pages → 关闭需审批（或点进 Run 批准）
 
 name: Deploy to GitHub Pages
 
@@ -14,8 +18,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: github-pages
-  cancel-in-progress: false
+  group: pages-deploy
+  cancel-in-progress: true
 
 jobs:
   build:
