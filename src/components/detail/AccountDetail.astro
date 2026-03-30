@@ -1,0 +1,26 @@
+---
+import type { Project } from '../../data/projects';
+interface Props { project: Project }
+const { project } = Astro.props;
+const primaryLink = project.links?.find(l => l.label === "账号主页");
+---
+<div class="space-y-4 font-sans text-sm text-muted">
+  {project.platform && (
+    <p><span class="uppercase tracking-widest text-xs">平台</span><br />
+    <span class="text-dark text-base">{project.platform}</span></p>
+  )}
+  {project.handle && (
+    <p><span class="uppercase tracking-widest text-xs">账号</span><br />
+    <span class="text-dark text-base">{project.handle}</span></p>
+  )}
+  {primaryLink && (
+    <a
+      href={primaryLink.url}
+      target="_blank"
+      rel="noopener"
+      class="inline-block mt-4 px-6 py-2.5 border border-dark text-dark font-sans text-xs tracking-widest uppercase hover:bg-dark hover:text-cream transition-colors duration-200"
+    >
+      {primaryLink.label} →
+    </a>
+  )}
+</div>

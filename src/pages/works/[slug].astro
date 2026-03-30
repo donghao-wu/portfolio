@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AccountDetail from '../../components/detail/AccountDetail.astro';
+import VideoDetail from '../../components/detail/VideoDetail.astro';
+import SoftwareDetail from '../../components/detail/SoftwareDetail.astro';
+import PaperDetail from '../../components/detail/PaperDetail.astro';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map(p => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+const project = projects.find(p => p.slug === slug)!;
+---
+<BaseLayout title={project.title} description={project.description}>
+  <article class="px-8 pt-12 pb-20 max-w-3xl mx-auto">
+
+    <!-- Breadcrumb -->
+    <p class="font-sans text-xs tracking-widest uppercase text-muted mb-8">
+      <a href="/works" class="hover:text-dark transition-colors">作品集</a>
+      <span class="mx-2">/</span>
+      {project.room}
+    </p>
+
+    <!-- Hero image (non-video types, or video fallback) -->
+    {project.type !== "video" && (
+      <div class="w-full aspect-video overflow-hidden bg-border mb-10 relative">
+        <img src={project.cover} alt={project.coverAlt} class="w-full h-full object-cover" />
+        <!-- Decorative year overlay -->
+        <span class="absolute bottom-4 right-6 font-serif text-8xl font-extralight text-white opacity-20 leading-none select-none pointer-events-none">
+          {project.year}
+        </span>
+      </div>
+    )}
+
+    <!-- Title -->
+    <h1 class="font-serif text-4xl sm:text-5xl font-light text-dark leading-tight mb-4">
+      {project.title}
+    </h1>
+
+    <!-- Metadata row -->
+    <div class="flex flex-wrap gap-4 font-sans text-xs tracking-widest uppercase text-muted border-t border-b border-border py-4 mb-10">
+      <span>{project.room}</span>
+      <span>·</span>
+      <span>{project.year}</span>
+      {project.tags.length > 0 && (
+        <>
+          <span>·</span>
+          <span>{project.tags.join(", ")}</span>
+        </>
+      )}
+    </div>
+
+    <!-- Description -->
+    <p class="font-sans text-base text-dark leading-relaxed mb-12">
+      {project.description}
+    </p>
+
+    <!-- Type-specific detail block -->
+    {project.type === "account" && <AccountDetail project={project} />}
+    {project.type === "video"   && <VideoDetail   project={project} />}
+    {project.type === "software" && <SoftwareDetail project={project} />}
+    {project.type === "paper"   && <PaperDetail    project={project} />}
+
+  </article>
+</BaseLayout>
