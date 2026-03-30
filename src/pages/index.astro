@@ -35,7 +35,7 @@ const rooms: { room: Room; cover: string; coverAlt: string }[] = [
         room={room}
         cover={cover}
         coverAlt={coverAlt}
-        href={`/works?room=${encodeURIComponent(room)}`}
+        href={`/works?room=${room.replace('ROOM ', '')}`}
       />
     ))}
   </section>

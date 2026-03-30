@@ -52,13 +52,24 @@ const roomList: Room[] = [
           card.style.display = 'none';
         }
       });
+
+      // 同步 URL，让详情页返回时能回到当前 tab
+      const url = new URL(window.location.href);
+      if (filter === 'all') {
+        url.searchParams.delete('room');
+      } else {
+        url.searchParams.set('room', filter.replace('ROOM ', ''));
+      }
+      history.replaceState(null, '', url.toString());
     });
   });
 
+  // URL 参数用短编号 (01–06)，映射回完整 room 名称
   const params = new URLSearchParams(window.location.search);
   const roomParam = params.get('room');
   if (roomParam) {
-    const matchingTab = [...tabs].find((t) => t.dataset.filter === roomParam);
+    const fullRoom = roomParam.startsWith('ROOM') ? roomParam : `ROOM ${roomParam}`;
+    const matchingTab = [...tabs].find((t) => t.dataset.filter === fullRoom);
     if (matchingTab) matchingTab.click();
   }
 </script>

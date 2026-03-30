@@ -19,9 +19,9 @@ const project = projects.find(p => p.slug === slug)!;
 
     <!-- Breadcrumb -->
     <p class="font-sans text-xs tracking-widest uppercase text-muted mb-8">
-      <a href={withBase('/works')} class="hover:text-dark transition-colors">作品集</a>
+      <a href={withBase(`/works?room=${project.room.replace('ROOM ', '')}`)} class="hover:text-dark transition-colors">作品集</a>
       <span class="mx-2">/</span>
-      {roomTitle(project.room)}
+      <a href={withBase(`/works?room=${project.room.replace('ROOM ', '')}`)} class="hover:text-dark transition-colors">{roomTitle(project.room)}</a>
     </p>
 
     <!-- Hero image (non-video types, or video fallback) -->
