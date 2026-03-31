@@ -4,10 +4,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        cream: '#F4EFE6',
-        dark: '#1A1A1A',
-        muted: '#6B6560',
-        border: '#E0D9CF',
+        cream: '#FFFFFF',
+        dark: '#0D0D0D',
+        muted: '#9CA3AF',
+        border: '#EBEBEB',
+        accent: '#B5292A',
       },
       fontFamily: {
         serif: ['Cormorant Garamond', 'Georgia', 'serif'],

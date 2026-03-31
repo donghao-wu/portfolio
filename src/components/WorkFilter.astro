@@ -2,20 +2,13 @@
 import type { Room } from '../data/projects';
 import { ROOM_LABELS } from '../data/projects';
 
-const roomList: Room[] = [
-  'ROOM 01',
-  'ROOM 02',
-  'ROOM 03',
-  'ROOM 04',
-  'ROOM 05',
-  'ROOM 06',
-];
+const roomList: Room[] = ['ROOM 01','ROOM 02','ROOM 03','ROOM 04','ROOM 05','ROOM 06'];
 ---
 <div class="flex flex-wrap gap-2 mb-10" id="filter-tabs">
   <button
     type="button"
     data-filter="all"
-    class="px-4 py-1.5 font-sans text-xs tracking-widest border transition-colors duration-200 border-dark bg-dark text-cream"
+    class="px-4 py-1.5 font-sans text-[10px] tracking-widest uppercase border transition-colors duration-200 border-dark bg-dark text-cream"
   >
     全部
   </button>
@@ -23,7 +16,7 @@ const roomList: Room[] = [
     <button
       type="button"
       data-filter={room}
-      class="px-4 py-1.5 font-sans text-xs tracking-widest border transition-colors duration-200 border-border text-muted hover:border-dark hover:text-dark"
+      class="px-4 py-1.5 font-sans text-[10px] tracking-widest uppercase border transition-colors duration-200 border-border text-muted hover:border-accent hover:text-accent"
     >
       {ROOM_LABELS[room]}
     </button>
@@ -31,7 +24,7 @@ const roomList: Room[] = [
 </div>
 
 <script>
-  const tabs = document.querySelectorAll<HTMLButtonElement>('#filter-tabs button');
+  const tabs  = document.querySelectorAll<HTMLButtonElement>('#filter-tabs button');
   const cards = document.querySelectorAll<HTMLElement>('[data-room]');
 
   tabs.forEach((tab) => {
@@ -39,21 +32,16 @@ const roomList: Room[] = [
       const filter = tab.dataset.filter!;
 
       tabs.forEach((t) => {
-        t.classList.remove('border-dark', 'bg-dark', 'text-cream');
+        t.classList.remove('border-dark', 'bg-dark', 'text-cream', 'border-accent', 'text-accent');
         t.classList.add('border-border', 'text-muted');
       });
       tab.classList.add('border-dark', 'bg-dark', 'text-cream');
       tab.classList.remove('border-border', 'text-muted');
 
       cards.forEach((card) => {
-        if (filter === 'all' || card.dataset.room === filter) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
+        card.style.display = (filter === 'all' || card.dataset.room === filter) ? 'block' : 'none';
       });
 
-      // 同步 URL，让详情页返回时能回到当前 tab
       const url = new URL(window.location.href);
       if (filter === 'all') {
         url.searchParams.delete('room');
@@ -64,7 +52,6 @@ const roomList: Room[] = [
     });
   });
 
-  // URL 参数用短编号 (01–06)，映射回完整 room 名称
   const params = new URLSearchParams(window.location.search);
   const roomParam = params.get('room');
   if (roomParam) {

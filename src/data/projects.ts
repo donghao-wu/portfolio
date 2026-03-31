@@ -292,7 +292,7 @@ export const projects: Project[] = [
     year: 2026,
     order: 2,
     featured: false,
-    cover: "/images/yj.png",
+    cover: "/images/yj1.png",
     coverAlt: "logo",
     description:
       "AIGC 全流程工作流工具：从剧本拆解、分析、生成分镜大纲与资产提示词，到生图无限画布一体化（域名备案中，官网链接可能暂时无法访问）。",
@@ -394,7 +394,7 @@ export const projects: Project[] = [
     year: 2026,
     order: 1,
     featured: true,
-    cover: "/images/room-05.webp",
+    cover: "/images/room-05.jpeg",
     coverAlt: "西亚斯校企联合",
     description:
       "旨在走进校园，进行深度校企联合，为大学生宣讲AI带来的社会变革，技术更新，未来方向；本人作为主讲人之一，为大学生进行关于AI信息发展的宣讲，对现阶段火爆的AI产品进行培训",

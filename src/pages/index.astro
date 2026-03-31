@@ -1,42 +1,124 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import RoomCard from '../components/RoomCard.astro';
+import { projects, ROOM_LABELS } from '../data/projects';
 import type { Room } from '../data/projects';
+import { withBase } from '../lib/site';
 
-const rooms: { room: Room; cover: string; coverAlt: string }[] = [
-  { room: "ROOM 01", cover: "/images/room-01.png", coverAlt: "room-01" },
-  { room: "ROOM 02", cover: "/images/room-02.png", coverAlt: "room-02" },
-  { room: "ROOM 03", cover: "/images/room-03.png", coverAlt: "room-03" },
-  { room: "ROOM 04", cover: "/images/room-04.png", coverAlt: "room-04" },
-  { room: "ROOM 05", cover: "/images/room-05.webp", coverAlt: "room-05" },
-  { room: "ROOM 06", cover: "/images/room-06.jpg", coverAlt: "room-06" },
-];
+type RoomKey = Room;
+
+const EN_LABELS: Record<RoomKey, string> = {
+  "ROOM 01": "AI Accounts",
+  "ROOM 02": "Short Films",
+  "ROOM 03": "Development",
+  "ROOM 04": "Research",
+  "ROOM 05": "Campus Projects",
+  "ROOM 06": "Film & TV",
+};
+
+const COVERS: Record<RoomKey, string> = {
+  "ROOM 01": "/images/room-01.png",
+  "ROOM 02": "/images/room-02.png",
+  "ROOM 03": "/images/room-03.png",
+  "ROOM 04": "/images/room-04.png",
+  "ROOM 05": "/images/room-05.jpeg",
+  "ROOM 06": "/images/room-06.jpg",
+};
+
+const roomKeys: RoomKey[] = ["ROOM 01","ROOM 02","ROOM 03","ROOM 04","ROOM 05","ROOM 06"];
+
+const roomData = roomKeys.map((room, i) => ({
+  num: String(i + 1).padStart(2, '0'),
+  label: ROOM_LABELS[room],
+  enLabel: EN_LABELS[room],
+  count: projects.filter(p => p.room === room).length,
+  cover: COVERS[room],
+  href: withBase(`/works?room=${String(i + 1).padStart(2, '0')}`),
+}));
 ---
-<BaseLayout title="首页">
-  <!-- Hero -->
-  <section class="px-8 pt-20 pb-16 max-w-5xl mx-auto">
-    <h1 class="font-serif text-4xl sm:text-6xl md:text-8xl font-light text-dark leading-none mb-4 whitespace-nowrap">
-      Lucius 吴东昊
-    </h1>
-    <p class="font-sans text-base text-muted tracking-wide">
-      AIGC Creator · Developer · Researcher · AIGC 创作者 · 软件开发者 · 研究学者
-    </p>
-  </section>
 
-  <!-- Room divider -->
-  <div class="px-8 max-w-5xl mx-auto border-t border-border mb-28">
-    <p class="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-muted pt-4">展厅</p>
+<BaseLayout title="首页">
+
+  <!-- Ghost: full-page cover image at low opacity on row hover -->
+  <div
+    id="ghost-bg"
+    class="fixed inset-0 z-0 pointer-events-none opacity-0 transition-opacity duration-700"
+    style="background-size: cover; background-position: center;"
+    aria-hidden="true"
+  ></div>
+
+  <div class="relative z-10">
+
+    <!-- Hero -->
+    <section class="px-8 pt-16 pb-24 max-w-5xl mx-auto">
+      <p class="font-sans text-[10px] tracking-[0.5em] uppercase text-gray-300 mb-6">
+        Portfolio &nbsp;— 作品集
+      </p>
+      <h1 class="font-serif font-light text-[#0D0D0D] leading-none mb-8">
+        <span class="block text-5xl sm:text-7xl md:text-[7rem]">Lucius</span>
+        <span class="block text-5xl sm:text-7xl md:text-[7rem]">吴东昊</span>
+      </h1>
+      <p class="font-sans text-[11px] tracking-[0.35em] uppercase text-gray-400">
+        AI Product Manager &nbsp;·&nbsp; Researcher &nbsp;·&nbsp; Creator
+      </p>
+    </section>
+
+    <!-- Catalogue -->
+    <section class="px-8 max-w-5xl mx-auto mb-40">
+
+      <!-- Red rule + header -->
+      <div class="border-t-2 border-[#B5292A] pt-3 mb-1 flex justify-between items-baseline">
+        <span class="font-sans text-[9px] tracking-[0.6em] uppercase text-[#B5292A]">Catalogue</span>
+        <span class="font-serif text-[10px] tracking-[0.2em] text-gray-300 italic">2024 — 2026</span>
+      </div>
+
+      <!-- Rows -->
+      {roomData.map(({ num, label, enLabel, count, cover, href }) => (
+        <a
+          href={href}
+          class="catalogue-row group flex items-baseline gap-5 sm:gap-10 py-6 border-b border-gray-100 hover:border-gray-200 transition-all duration-200 no-underline"
+          data-cover={cover}
+        >
+          <!-- Room number in red -->
+          <span class="font-sans text-[11px] text-[#B5292A] tracking-widest w-5 shrink-0 tabular-nums">
+            {num}
+          </span>
+
+          <!-- Chinese title -->
+          <span class="font-serif text-[1.75rem] sm:text-4xl md:text-5xl font-light text-[#0D0D0D] leading-none flex-1 min-w-0">
+            {label}
+          </span>
+
+          <!-- English subtitle -->
+          <span class="hidden sm:block font-sans text-[10px] tracking-[0.35em] uppercase text-gray-300 group-hover:text-gray-500 transition-colors duration-300 shrink-0">
+            {enLabel}
+          </span>
+
+          <!-- Count -->
+          <span class="font-sans text-[11px] tracking-widest text-gray-300 group-hover:text-[#B5292A] transition-colors duration-300 shrink-0 ml-auto tabular-nums">
+            {String(count).padStart(2, '0')}
+          </span>
+        </a>
+      ))}
+
+    </section>
   </div>
 
-  <!-- Room grid -->
-  <section class="px-8 pb-12 max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-px bg-border border border-border">
-    {rooms.map(({ room, cover, coverAlt }) => (
-      <RoomCard
-        room={room}
-        cover={cover}
-        coverAlt={coverAlt}
-        href={`/works?room=${room.replace('ROOM ', '')}`}
-      />
-    ))}
-  </section>
 </BaseLayout>
+
+<script>
+  const ghost = document.getElementById('ghost-bg') as HTMLElement;
+  const rows  = document.querySelectorAll<HTMLElement>('.catalogue-row');
+
+  rows.forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      const cover = row.dataset.cover;
+      if (cover) {
+        ghost.style.backgroundImage = `url(${cover})`;
+        ghost.style.opacity = '0.08';
+      }
+    });
+    row.addEventListener('mouseleave', () => {
+      ghost.style.opacity = '0';
+    });
+  });
+</script>

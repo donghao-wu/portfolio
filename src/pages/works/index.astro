@@ -1,37 +1,146 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import WorkCard from '../../components/WorkCard.astro';
-import WorkFilter from '../../components/WorkFilter.astro';
-import { projects } from '../../data/projects';
+import { projects, ROOM_LABELS } from '../../data/projects';
+import type { Room } from '../../data/projects';
+import { withBase } from '../../lib/site';
 
-// Sort: by room order, then by project order within room
+const roomOrder: Room[] = ["ROOM 01","ROOM 02","ROOM 03","ROOM 04","ROOM 05","ROOM 06"];
+
 const sorted = [...projects].sort((a, b) => {
-  const roomOrder = [
-    "ROOM 01",
-    "ROOM 02",
-    "ROOM 03",
-    "ROOM 04",
-    "ROOM 05",
-    "ROOM 06",
-  ];
   const roomDiff = roomOrder.indexOf(a.room) - roomOrder.indexOf(b.room);
   return roomDiff !== 0 ? roomDiff : a.order - b.order;
 });
 ---
 <BaseLayout title="作品集">
-  <div class="px-8 pt-12 pb-20 max-w-5xl mx-auto">
-    <!-- Page header -->
-    <div class="border-b border-border pb-8 mb-10">
-      <h1 class="font-serif text-5xl font-light text-dark mb-2">作品集</h1>
-      <p class="font-sans text-sm text-muted tracking-wide">Collection</p>
+
+  <!-- Ghost background -->
+  <div
+    id="ghost-bg"
+    class="fixed inset-0 z-0 pointer-events-none opacity-0 transition-opacity duration-700"
+    style="background-size: cover; background-position: center;"
+    aria-hidden="true"
+  ></div>
+
+  <div class="relative z-10 px-8 pt-12 pb-24 max-w-5xl mx-auto">
+
+    <!-- Header -->
+    <div class="mb-16">
+      <p class="font-sans text-[10px] tracking-[0.5em] uppercase text-gray-300 mb-6">Works — 作品集</p>
+      <h1 class="font-serif text-5xl sm:text-6xl font-light text-dark leading-none">作品集</h1>
     </div>
 
-    <!-- Filter tabs -->
-    <WorkFilter />
-
-    <!-- Works grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border border border-border">
-      {sorted.map(project => <WorkCard project={project} />)}
+    <!-- Filter -->
+    <div class="border-t-2 border-accent pt-3 mb-2 flex items-baseline justify-between">
+      <span class="font-sans text-[9px] tracking-[0.6em] uppercase text-accent">Collection</span>
+      <span class="font-serif text-[10px] italic text-gray-300">{sorted.length} works</span>
     </div>
+
+    <div class="flex flex-wrap gap-x-6 gap-y-1 mb-10 mt-4" id="filter-tabs">
+      <button type="button" data-filter="all"
+        class="font-sans text-[10px] tracking-widest uppercase py-1 border-b-2 border-dark text-dark transition-all duration-200">
+        全部
+      </button>
+      {roomOrder.map((room) => (
+        <button type="button" data-filter={room}
+          class="font-sans text-[10px] tracking-widest uppercase py-1 border-b-2 border-transparent text-muted hover:text-accent hover:border-accent transition-all duration-200">
+          {ROOM_LABELS[room]}
+        </button>
+      ))}
+    </div>
+
+    <!-- Catalogue list -->
+    <div id="works-list">
+      {sorted.map((project, i) => (
+        <a
+          href={withBase(`/works/${project.slug}`)}
+          class="work-row group flex items-baseline gap-5 sm:gap-10 py-5 border-b border-gray-100 hover:border-gray-200 transition-all duration-200 no-underline"
+          data-room={project.room}
+          data-cover={withBase(project.cover)}
+        >
+          <!-- Index number -->
+          <span class="font-sans text-[10px] text-gray-300 tracking-widest w-6 shrink-0 tabular-nums group-hover:text-accent transition-colors duration-200">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+
+          <!-- Title -->
+          <span class="font-serif text-xl sm:text-2xl md:text-3xl font-light text-dark leading-none flex-1 min-w-0 group-hover:opacity-60 transition-opacity duration-200">
+            {project.title}
+          </span>
+
+          <!-- Room label -->
+          <span class="hidden sm:block font-sans text-[10px] tracking-[0.3em] uppercase text-gray-300 group-hover:text-accent transition-colors duration-200 shrink-0">
+            {ROOM_LABELS[project.room]}
+          </span>
+
+          <!-- Year -->
+          <span class="font-sans text-[10px] tracking-widest text-gray-300 shrink-0 tabular-nums">
+            {project.year}
+          </span>
+        </a>
+      ))}
+    </div>
+
   </div>
 </BaseLayout>
+
+<script>
+  // Ghost hover
+  const ghost = document.getElementById('ghost-bg') as HTMLElement;
+  document.querySelectorAll<HTMLElement>('.work-row').forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      const cover = row.dataset.cover;
+      if (cover) {
+        ghost.style.backgroundImage = `url(${cover})`;
+        ghost.style.opacity = '0.07';
+      }
+    });
+    row.addEventListener('mouseleave', () => {
+      ghost.style.opacity = '0';
+    });
+  });
+
+  // Filter
+  const tabs  = document.querySelectorAll<HTMLButtonElement>('#filter-tabs button');
+  const rows  = document.querySelectorAll<HTMLElement>('.work-row');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const filter = tab.dataset.filter!;
+
+      tabs.forEach(t => {
+        t.classList.remove('border-dark', 'text-dark');
+        t.classList.add('border-transparent', 'text-muted');
+      });
+      tab.classList.add('border-dark', 'text-dark');
+      tab.classList.remove('border-transparent', 'text-muted');
+
+      // Re-number visible rows
+      let visibleIdx = 1;
+      rows.forEach(row => {
+        const visible = filter === 'all' || row.dataset.room === filter;
+        row.style.display = visible ? 'flex' : 'none';
+        if (visible) {
+          const numEl = row.querySelector('span');
+          if (numEl) numEl.textContent = String(visibleIdx).padStart(2, '0');
+          visibleIdx++;
+        }
+      });
+
+      const url = new URL(window.location.href);
+      if (filter === 'all') {
+        url.searchParams.delete('room');
+      } else {
+        url.searchParams.set('room', filter.replace('ROOM ', ''));
+      }
+      history.replaceState(null, '', url.toString());
+    });
+  });
+
+  // Init from URL
+  const roomParam = new URLSearchParams(window.location.search).get('room');
+  if (roomParam) {
+    const fullRoom = roomParam.startsWith('ROOM') ? roomParam : `ROOM ${roomParam}`;
+    const match = [...tabs].find(t => t.dataset.filter === fullRoom);
+    if (match) match.click();
+  }
+</script>
